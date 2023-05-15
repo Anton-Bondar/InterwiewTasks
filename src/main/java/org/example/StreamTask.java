@@ -2,6 +2,8 @@ package org.example;
 
 import org.example.model.Employee;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -28,11 +30,17 @@ public class StreamTask {
                 .map(e -> String.join(" ", e.getFirstName(), e.getLastName()))
                 .collect(Collectors.toList());
 
-       System.out.format("names %s", names);
+        System.out.format("names %s", names);
 
         Map<Long, List<Employee>> grouped = employees
                 .stream()
                 .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.mapping(Function.identity(), Collectors.toList())));
+
+        Comparator<Employee> comparator = Comparator.comparing(Employee::getFirstName);
+
+        grouped.values()
+                .stream()
+                .forEach(empl -> Collections.sort(empl, comparator));
 
         System.out.println("grouped empl: " + grouped);
     }
